@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear</title>
+</head>
+<body>
+    
+    <div class="container">
+        <h1>Crear Tarea</h1>
+        <form action="/tareas" method="POST">
+            <input
+                type="text"
+                placeholder="Descripcion de la tarea"
+                class="form-control my-2"
+                name="descripcion"
+            >
+            <input
+                type="text"
+                placeholder="Fecha límite de la tarea"
+                class="form-control my-2"
+                name="fechaVencimiento"
+            >
+            <input
+            type="number"
+            placeholder="Prioridad"
+            class="form-control my-2"
+            name="prioridad"
+            >
+            <button
+                class="btn btn-success btn-block"
+                type = "submit"
+            >
+                Crear Tarea
+            </button> 
+        </form>
+    </div>
+
+
+</body>
+</html>
