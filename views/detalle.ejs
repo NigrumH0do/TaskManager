@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear</title>
+</head>
+<body>
+    
+    <div class="container">
+        <h1>Detalle Tarea</h1>
+        <% if (error) { %>
+            <p>
+                <%= mensaje %>
+            </p>
+            <a href="/tareas" class="btn btn-dark btn-block">Regresar</a>
+        <% } %>
+
+        <% if (!error) { %>
+            <form id="formularioEditar" data-id="<%= tarea.id %>">
+                <input
+                    type="text"
+                    class="form-control my-2"
+                    name="descripcion"
+                    value="<%= tarea.descripcion %>"
+                    id="descripcionInput"
+                >
+                <input
+                    type="text"
+                    class="form-control my-2"
+                    name="fechaVencimiento"
+                    value="<%= tarea.fechaVencimiento %>"
+                    id="fechaVencimientoInput"
+                >
+                <input
+                    type="text"
+                    class="form-control my-2"
+                    name="completado"
+                    value="<%= tarea.completado %>"
+                    id="completadoInput"
+                >
+                <button class="btn btn-warning btn-block" type="submit">
+                    Editar
+                </button>
+            </form>
+
+            <hr>
+            <button class="btn btn-danger btn-sm mt-5" id="btnEliminar" data-id="<%= tarea.id %>">
+                Eliminar
+            </button>
+
+        <% } %>    
+
+    </div>
+
+
+</body>
+</html>
+
+<script>
+    const btnEliminar = document.querySelector('#btnEliminar');
+
+    btnEliminar.addEventListener('click', async () => {
+        const id = btnEliminar.dataset.id;
+        try {
+            const data = await fetch(`/tareas/${id}`,{
+                method: 'delete'
+            
+            })
+            const res = await data.json();
+
+            if (res.estado) {
+                window.location.href = '/tareas';
+            }else{
+                console.log(res.mensaje);
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    const formularioEditar = document.querySelector('#formularioEditar');
+
+    formularioEditar.addEventListener('submit', async(e) => {
+        e.preventDefault();
+
+        const descripcion = formularioEditar.elements['descripcion'].value;
+        const fechaVencimiento = formularioEditar.elements['fechaVencimiento'].value;
+        const completado = formularioEditar.elements['completado'].value;
+        const id = formularioEditar.dataset.id;
+
+        try {
+            const data = await fetch(`/tareas/${id}`,{
+                method: 'put',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({descripcion, fechaVencimiento,completado})
+            });
+            const res = await data.json();
+
+            if (res.estado) {
+                window.location.href = '/tareas';
+            }else{
+                console.log(res.mensaje);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    });
+
+</script>

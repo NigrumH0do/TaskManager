@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EJS</title>
+</head>
+<body>
+    <div class="container">
+
+        <h1>Lista Tareas</h1>
+
+        <a
+            class="btn btn-sucess btn-block my-4"
+            href="/tareas/busqueda"
+        >
+            Buscar Tarea
+        </a>
+        <hr>
+        <form action="/tareas/restaurar-ultima-eliminada" method="post">
+            <button type="submit" class="btn btn-primary">Restaurar última tarea eliminada</button>
+        </form>        
+        <hr>
+        <form action="/tareas/guardar-txt" method="post">
+            <button type="submit" class="btn btn-primary">guardar-txt</button>
+        </form>
+        <hr>
+        <form action="/tareas/unir-tareas" method="post">
+            <button type="submit" class="btn btn-primary">Unir todas las tareas</button>
+        </form>
+        <hr>
+        <form id="formProximaTarea" action="/tareas/proxima" method="post">
+            <button type="submit" class="btn btn-primary">Tarea más próxima a vencer</button>
+        </form>
+        <p id="outputTarea"></p>     
+        <hr>   
+        <a
+            class="btn btn-sucess btn-block my-4"
+            href="/tareas/crear"
+        >
+            Crear Tarea
+        </a>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Descripcion</th>
+                    <th scope="col">FechaCreacion</th>
+                    <th scope="col">FechaVencimiento</th>
+                    <th scope="col">Prioridad</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (arrayTareas.length > 0) { %>
+                    <% arrayTareas.forEach(tarea => { %>
+                        <tr>
+                            <th scope="row"><%= tarea.id %></th>
+                            <td><%= tarea.descripcion %></td>
+                            <td><%= new Date(tarea.fechaCreacion).toLocaleDateString() %></td>
+                            <td><%= new Date(tarea.fechaVencimiento).toLocaleDateString() %></td>
+                            <td><%= tarea.prioridad %></td>
+                            <td>
+                                <% if (tarea.completado) { %>
+                                    Completado
+                                  <% } else { %>
+                                    Pendiente
+                                  <% } %>
+                            </td>
+                            <td>
+                                <a href="tareas/<%= tarea.id %>" class="btn btn-warning btn-sm">
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    No hay tareas
+                  <% } %>
+            </tbody>            
+        </table>
+    </div>
+</body>
+</html>

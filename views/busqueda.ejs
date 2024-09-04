@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busqueda</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Buscar Tarea</h1>
+        <form action="/tareas/busqueda" method="get">
+            <input
+                type="text"
+                placeholder="Descripcion de la tarea"
+                class="form-control my-2"
+                name="descripcion"
+            >
+            <input
+                type="text"
+                placeholder="Fecha Vencimiento(yyyy-mm-dd)"
+                class="form-control my-2"
+                name="fechaVencimiento"
+            >
+            <button
+                class="btn btn-success btn-block"
+                type = "submit"
+            >
+                Buscar Tarea
+            </button> 
+        </form>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Descripcion</th>
+                    <th scope="col">FechaCreacion</th>
+                    <th scope="col">FechaVencimiento</th>
+                    <th scope="col">Prioridad</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (arrayTareas.length > 0) { %>
+                    <% arrayTareas.forEach(tarea => { %>
+                        <tr>
+                            <th scope="row"><%= tarea.id %></th>
+                            <td><%= tarea.descripcion %></td>
+                            <td><%= new Date(tarea.fechaCreacion).toLocaleDateString() %></td>
+                            <td><%= new Date(tarea.fechaVencimiento).toLocaleDateString() %></td>
+                            <td><%= tarea.prioridad %></td>
+                            <td>
+                                <% if (tarea.completado) { %>
+                                    Completado
+                                  <% } else { %>
+                                    Pendiente
+                                  <% } %>
+                            </td>
+                            <td>
+                                <a href="/tareas" class="btn btn-warning btn-sm">
+                                    regresar
+                                </a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    No hay tareas que conincidan con la busqueda
+                  <% } %> 
+            </tbody>            
+        </table>
+
+    </div>
+</body>
+</html>

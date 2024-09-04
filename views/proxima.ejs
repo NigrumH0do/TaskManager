@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarea más próxima a vencer</title>
+</head>
+<body>
+    
+    <div class="container">
+        <h1>Tarea más próxima a vencer</h1>
+        <% if (tarea) { %>
+            <p><strong>Descripción:</strong> <%= tarea.descripcion %></p>
+            <p><strong>Fecha de Vencimiento:</strong> <%= new Date(tarea.fechaVencimiento).toLocaleDateString() %></p>
+            <p><strong>Prioridad:</strong> <%= tarea.prioridad %></p>
+        <% } else { %>
+            <p>No hay tareas pendientes.</p>
+        <% } %>
+    </div>
+
+</body>
+</html>
