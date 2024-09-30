@@ -1,75 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busqueda</title>
+    <title>Búsqueda de Tareas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        /* Los mismos estilos de la página principal */
+        .search-bar, .buttons-container {
+            margin-bottom: 20px;
+        }
+
+        .search-icon {
+            background: none;
+            border: none;
+        }
+
+        .search-icon img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .task-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .task-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .priority-high {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .priority-medium {
+            border-left: 5px solid #f39c12;
+        }
+
+        .priority-low {
+            border-left: 5px solid #2ecc71;
+        }
+
+        /* Estilos para subtareas */
+        .subtask {
+            margin-left: 20px;
+        }
+
+        .subtask-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .collapse-subtasks {
+            margin-top: 10px;
+            cursor: pointer;
+            color: #3498db;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .btn-icon img {
+            width: 25px;
+            height: 25px;
+        }
+
+        .subtask-buttons {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .back-btn {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Buscar Tarea</h1>
-        <form action="/tareas/busqueda" method="get">
-            <input
-                type="text"
-                placeholder="Descripcion de la tarea"
-                class="form-control my-2"
-                name="descripcion"
-            >
-            <input
-                type="text"
-                placeholder="Fecha Vencimiento(yyyy-mm-dd)"
-                class="form-control my-2"
-                name="fechaVencimiento"
-            >
-            <button
-                class="btn btn-success btn-block"
-                type = "submit"
-            >
-                Buscar Tarea
-            </button> 
-        </form>
+        <h1 class="text-center my-4">Resultados de la Búsqueda</h1>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col">FechaCreacion</th>
-                    <th scope="col">FechaVencimiento</th>
-                    <th scope="col">Prioridad</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Accion</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (arrayTareas.length > 0) { %>
-                    <% arrayTareas.forEach(tarea => { %>
-                        <tr>
-                            <th scope="row"><%= tarea.id %></th>
-                            <td><%= tarea.descripcion %></td>
-                            <td><%= new Date(tarea.fechaCreacion).toLocaleDateString() %></td>
-                            <td><%= new Date(tarea.fechaVencimiento).toLocaleDateString() %></td>
-                            <td><%= tarea.prioridad %></td>
-                            <td>
-                                <% if (tarea.completado) { %>
-                                    Completado
-                                  <% } else { %>
-                                    Pendiente
-                                  <% } %>
-                            </td>
-                            <td>
-                                <a href="/tareas" class="btn btn-warning btn-sm">
-                                    regresar
-                                </a>
-                            </td>
-                        </tr>
-                    <% }) %>
-                <% } else { %>
-                    No hay tareas que conincidan con la busqueda
-                  <% } %> 
-            </tbody>            
-        </table>
+        <!-- Botón de regresar -->
+        <div class="back-btn">
+            <a href="/tareas" class="btn btn-secondary">Regresar a la página principal</a>
+        </div>
 
+        <!-- Barra de búsqueda -->
+        <div class="search-bar">
+            <form action="/tareas/busqueda" method="get" class="form-inline">
+                <input type="text" name="descripcion" class="form-control" placeholder="Descripción" aria-label="Descripción">
+                <input type="date" name="fecha" class="form-control" placeholder="Fecha" aria-label="Fecha">
+
+                <!-- Menú desplegable para seleccionar la prioridad -->
+                <select name="prioridad" class="form-control">
+                    <option value="">Seleccionar prioridad</option>
+                    <option value="Baja">Baja</option>
+                    <option value="Media">Media</option>
+                    <option value="Alta">Alta</option>
+                </select>
+
+                <!-- Menú desplegable para seleccionar el estado -->
+                <select name="estado" class="form-control">
+                    <option value="">Seleccionar estado</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Completado">Completado</option>
+                </select>
+
+                <button type="submit" class="search-icon" aria-label="Buscar">
+                    <img src="/images/lupa.png" alt="Buscar">
+                </button>
+            </form>
+        </div>
+
+        <!-- Resultados -->
+        <% if (tareas.length > 0) { %>
+            <% tareas.forEach(tarea => { 
+                const fechaActual = new Date();
+                const fechaVencimiento = new Date(tarea.fechaVencimiento);
+                const vencida = fechaVencimiento < fechaActual && !tarea.completado;
+                const completadaVencida = fechaVencimiento < fechaActual && tarea.completado;
+            %>
+                <div class="task-card <% if (tarea.prioridad === 'Alta') { %>priority-high<% } else if (tarea.prioridad === 'Media') { %>priority-medium<% } else { %>priority-low<% } %>">
+                    <div class="task-card-header">
+                        <h3><%= tarea.descripcion %></h3>
+                        <div>
+                            <!-- Botón de editar -->
+                            <a href="<%= tarea._id %>/editar" class="btn-icon" aria-label="Editar">
+                                <img src="/images/editar.png" alt="Editar">
+                            </a>
+                            <!-- Botón de eliminar -->
+                            <a href="<%= tarea._id %>/eliminar" class="btn-icon" aria-label="Eliminar">
+                                <img src="/images/eliminar.png" alt="Eliminar">
+                            </a>
+                        </div>
+                    </div>
+                    <p>Fecha de vencimiento: 
+                        <%= new Date(tarea.fechaVencimiento.getTime() + (new Date().getTimezoneOffset() * 60000)).toLocaleDateString('es-ES') %>
+                        <% if (vencida) { %>
+                            <span style="color: red; font-weight: bold;">(Vencida)</span>
+                        <% } else if (completadaVencida) { %>
+                            <span style="color: green; font-weight: bold;">(Completada)</span>
+                        <% } %>
+                    </p>
+                    <p>Prioridad: <%= tarea.prioridad %></p>
+                    <p>Estado: <% if (tarea.completado) { %>Completado<% } else { %>Pendiente<% } %></p>
+                    
+                    <!-- Botón para mostrar subtareas -->
+                    <div class="collapse-subtasks" onclick="toggleSubtasks(this)" aria-expanded="false">
+                        Mostrar subtareas
+                    </div>
+                    
+                    <!-- Lista de subtareas -->
+                    <ul class="subtask-list" style="display: none;">
+                        <% if (tarea.subtareas && tarea.subtareas.length > 0) { %>
+                            <% tarea.subtareas.forEach(subtarea => { %>
+                                <li class="subtask">
+                                    <%= subtarea.descripcion %> - Estado: <% if (subtarea.completado) { %>Completado<% } else { %>Pendiente<% } %>
+                                    <div class="subtask-buttons">
+                                        <!-- Botón de editar subtarea -->
+                                        <a href="<%= subtarea._id %>/editar-subtarea" class="btn-icon" aria-label="Editar subtarea">
+                                            <img src="/images/editar.png" alt="Editar subtarea">
+                                        </a>
+                                        <!-- Botón de eliminar subtarea -->
+                                        <a href="<%= subtarea._id %>/eliminar" class="btn-icon" aria-label="Eliminar subtarea">
+                                            <img src="/images/eliminar.png" alt="Eliminar subtarea">
+                                        </a>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        <% } else { %>
+                            <li class="subtask">No hay subtareas</li>
+                        <% } %>
+                    </ul>
+
+                    <!-- Botón para añadir subtarea -->
+                    <a href="<%= tarea._id %>/subtarea" class="btn btn-info btn-block mt-3">Añadir Subtarea</a>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="text-center">No se encontraron tareas</p>
+        <% } %>
     </div>
+
+    <script>
+        // Función para mostrar/ocultar subtareas
+        function toggleSubtasks(element) {
+            const subtaskList = element.nextElementSibling;
+            if (subtaskList.style.display === "none") {
+                subtaskList.style.display = "block";
+                element.textContent = "Ocultar subtareas";
+                element.setAttribute("aria-expanded", "true");
+            } else {
+                subtaskList.style.display = "none";
+                element.textContent = "Mostrar subtareas";
+                element.setAttribute("aria-expanded", "false");
+            }
+        }
+    </script>
 </body>
 </html>

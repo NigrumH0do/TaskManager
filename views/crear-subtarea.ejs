@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Subtarea</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Añadir Subtarea a: <%= tareaPadre.descripcion %></h1>
+        <form action="/tareas/<%= tareaPadre._id %>/subtarea" method="POST">
+            <div class="form-group">
+                <label for="descripcion">Descripción de la Subtarea</label>
+                <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+            </div>    
+            <button type="submit" class="btn btn-primary">Añadir Subtarea</button>
+            <a href="/tareas" class="btn btn-secondary">Cancelar</a> 
+        </form>        
+    </div>
+</body>
+</html>

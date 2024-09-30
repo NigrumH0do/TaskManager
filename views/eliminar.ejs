@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Tarea</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container text-center my-5">
+        <h1>¿Estás seguro de que quieres eliminar esta tarea?</h1>
+        <p><strong>Descripción:</strong> <%= tarea.descripcion %></p>
+        <p><strong>Fecha de vencimiento:</strong> <%= new Date(tarea.fechaVencimiento).toLocaleDateString() %></p>
+        <p><strong>Prioridad:</strong> <%= tarea.prioridad %></p>
+        
+        <div class="mt-4">
+            <!-- Botón para confirmar la eliminación -->
+            <form action="/tareas/<%= tarea.id %>/eliminar" method="POST">
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+            
+            <!-- Botón para cancelar y regresar -->
+            <a href="/tareas" class="btn btn-secondary mt-2">Cancelar</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Subtarea</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4 text-center">Editar Subtarea</h1>
+
+        <!-- Formulario para editar la subtarea -->
+        <form action="/tareas/<%= subtarea._id %>/editar-subtarea" method="post">
+            <div class="form-group">
+                <label for="descripcion">Descripción</label>
+                <input type="text" class="form-control" id="descripcion" name="descripcion" value="<%= subtarea.descripcion %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="completado">Completado</label>
+                <input type="checkbox" id="completado" name="completado" <%= subtarea.completado ? "checked" : "" %>>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <a href="/tareas" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>

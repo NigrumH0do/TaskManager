@@ -3,10 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EJS</title>
+    <title>Administrador de Tareas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            font-size: 3em;
+            margin-bottom: 0.5em;
+        }
+
+        h2 {
+            color: #555;
+            margin-bottom: 2em;
+        }
+
+        .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .authors {
+            margin-top: 2em;
+            font-size: 1em;
+            color: #777;
+        }
+    </style>
 </head>
 <body>
-    <h1>Titulo index</h1>
-    <h2><%= title %></h2>
+
+    <div class="container">
+        <h1>Administrador de Tareas</h1>
+        <h2>¡Gestiona tus tareas de manera eficiente!</h2>
+        <a href="/tareas" class="btn">Comenzar</a>
+        <div class="authors">
+            <p>Desarrollado por: David Benjumea, Nicole Celemin y Leonardo Pinilla</p>
+        </div>
+    </div>
+
 </body>
 </html>

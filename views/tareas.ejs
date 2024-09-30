@@ -3,84 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EJS</title>
+    <title>Administrador de Tareas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        /* Estilos generales */
+        .search-bar, .sort-section, .buttons-container {
+            margin-bottom: 20px;
+        }
+
+        .search-icon {
+            background: none;
+            border: none;
+        }
+
+        .search-icon img {
+            width: 20px; /* Ajustado a un tamaño más pequeño */
+            height: 20px;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .btn-custom {
+            flex: 1;
+            margin: 0 5px;
+            text-align: center;
+        }
+
+        /* Estilos de las tarjetas de tareas */
+        .task-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .task-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-card-header h3 {
+            margin: 0;
+        }
+
+        .priority-high {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .priority-medium {
+            border-left: 5px solid #f39c12;
+        }
+
+        .priority-low {
+            border-left: 5px solid #2ecc71;
+        }
+
+        /* Estilos de subtareas */
+        .subtask {
+            margin-left: 20px;
+        }
+
+        .subtask-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        /* Collapse subtareas */
+        .collapse-subtasks {
+            margin-top: 10px;
+            cursor: pointer;
+            color: #3498db;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .btn-icon img {
+            width: 25px;
+            height: 25px;
+        }
+
+        /* Estilos de botones de subtareas */
+        .subtask-buttons {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <h1 class="text-center my-4">Administrador de Tareas</h1>
 
-        <h1>Lista Tareas</h1>
+        <!-- Search bar -->
+        <div class="search-bar">
+            <form action="/tareas/busqueda" method="get" class="form-inline">
+                <input type="text" name="descripcion" class="form-control" placeholder="Descripción" aria-label="Descripción">
+                <input type="date" name="fecha" class="form-control" placeholder="Fecha" aria-label="Fecha">
+                <!-- Modificación: Select para prioridad -->
+                <select name="prioridad" class="form-control" aria-label="Prioridad">
+                    <option value="">Todas las prioridades</option>
+                    <option value="Baja">Baja</option>
+                    <option value="Media">Media</option>
+                    <option value="Alta">Alta</option>
+                </select>
+                <!-- Modificación: Select para estado -->
+                <select name="estado" class="form-control" aria-label="Estado">
+                    <option value="">Todos los estados</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Completado">Completado</option>
+                </select>
+                <button type="submit" class="search-icon" aria-label="Buscar">
+                    <img src="/images/lupa.png" alt="Buscar">
+                </button>
+            </form>
+        </div>
 
-        <a
-            class="btn btn-sucess btn-block my-4"
-            href="/tareas/busqueda"
-        >
-            Buscar Tarea
-        </a>
-        <hr>
-        <form action="/tareas/restaurar-ultima-eliminada" method="post">
-            <button type="submit" class="btn btn-primary">Restaurar última tarea eliminada</button>
-        </form>        
-        <hr>
-        <form action="/tareas/guardar-txt" method="post">
-            <button type="submit" class="btn btn-primary">guardar-txt</button>
-        </form>
-        <hr>
-        <form action="/tareas/unir-tareas" method="post">
-            <button type="submit" class="btn btn-primary">Unir todas las tareas</button>
-        </form>
-        <hr>
-        <form id="formProximaTarea" action="/tareas/proxima" method="post">
-            <button type="submit" class="btn btn-primary">Tarea más próxima a vencer</button>
-        </form>
-        <p id="outputTarea"></p>     
-        <hr>   
-        <a
-            class="btn btn-sucess btn-block my-4"
-            href="/tareas/crear"
-        >
-            Crear Tarea
-        </a>
-        
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col">FechaCreacion</th>
-                    <th scope="col">FechaVencimiento</th>
-                    <th scope="col">Prioridad</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Accion</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (arrayTareas.length > 0) { %>
-                    <% arrayTareas.forEach(tarea => { %>
-                        <tr>
-                            <th scope="row"><%= tarea.id %></th>
-                            <td><%= tarea.descripcion %></td>
-                            <td><%= new Date(tarea.fechaCreacion).toLocaleDateString() %></td>
-                            <td><%= new Date(tarea.fechaVencimiento).toLocaleDateString() %></td>
-                            <td><%= tarea.prioridad %></td>
-                            <td>
-                                <% if (tarea.completado) { %>
-                                    Completado
-                                  <% } else { %>
-                                    Pendiente
-                                  <% } %>
-                            </td>
-                            <td>
-                                <a href="tareas/<%= tarea.id %>" class="btn btn-warning btn-sm">
-                                    Editar
-                                </a>
-                            </td>
-                        </tr>
-                    <% }) %>
-                <% } else { %>
-                    No hay tareas
-                  <% } %>
-            </tbody>            
-        </table>
+        <!-- Sort section -->
+        <div class="sort-section">
+            <label>Ordenar por:</label>
+            <label><input type="radio" name="ordenar" value="fechaAsc" onclick="ordenarPorFechaAscendente()"> Fecha de Vencimiento Ascendente</label>
+            <label><input type="radio" name="ordenar" value="fechaDesc" onclick="ordenarPorFechaDescendente()"> Fecha de Vencimiento Descendente</label>
+            <label><input type="radio" name="ordenar" value="prioridadAsc" onclick="ordenarPorPrioridadAscendente()"> Prioridad Ascendente</label>
+            <label><input type="radio" name="ordenar" value="prioridadDesc" onclick="ordenarPorPrioridadDescendente()"> Prioridad Descendente</label>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="buttons-container">
+            <button id="restaurar-btn" class="btn btn-primary btn-custom">Restaurar última tarea</button>
+            <button id="recomendar-btn" class="btn btn-warning btn-custom">Recomendar tarea</button>
+
+            <form action="/tareas/guardar-txt" method="post" class="btn-custom">
+                <button type="submit" class="btn btn-success btn-block">Guardar en TXT</button>
+            </form>
+
+            <a href="/tareas/crear" class="btn btn-success btn-block btn-custom">Crear Tarea</a>
+        </div>
+
+        <!-- Alert para mensajes -->
+        <div id="mensaje" class="alert" style="display: none;"></div>
+
+                <!-- Task cards -->
+        <% if (arrayTareas.length > 0) { %>
+            <% arrayTareas.forEach(tarea => { 
+                const fechaActual = new Date();
+                const fechaVencimiento1 = new Date(tarea.fechaVencimiento);
+                const fechaVencimiento = new Date(tarea.fechaVencimiento);
+                fechaVencimiento1.setDate(fechaVencimiento.getDate() + 1);
+                const vencida = fechaVencimiento1 < fechaActual && !tarea.completado;
+                const completadaVencida = fechaVencimiento1 < fechaActual && tarea.completado;
+            %>
+                <div class="task-card <% if (tarea.prioridad === 'Alta') { %>priority-high<% } else if (tarea.prioridad === 'Media') { %>priority-medium<% } else { %>priority-low<% } %>">
+                    <div class="task-card-header">
+                        <h3><%= tarea.descripcion %></h3>
+                        <div>
+                            <!-- Button with edit icon -->
+                            <a href="/tareas/<%= tarea._id %>/editar" class="btn-icon" aria-label="Editar">
+                                <img src="/images/editar.png" alt="Editar">
+                            </a>
+                            <!-- Button with delete icon -->
+                            <a href="/tareas/<%= tarea._id %>/eliminar" class="btn-icon" aria-label="Eliminar">
+                                <img src="/images/eliminar.png" alt="Eliminar">
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Distintivo de fecha vencida o completada -->
+                    <p>Fecha de vencimiento: 
+                        <%= new Date(tarea.fechaVencimiento.getTime() + (new Date().getTimezoneOffset() * 60000)).toLocaleDateString('es-ES') %>
+                        <% if (vencida) { %>
+                            <span style="color: red; font-weight: bold;">(Vencida)</span>
+                        <% } else if (completadaVencida) { %>
+                            <span style="color: green; font-weight: bold;">(Completada)</span>
+                        <% } %>
+                    </p>
+
+                    <p>Prioridad: <%= tarea.prioridad %></p>
+                    <p>Estado: <% if (tarea.completado) { %>Completado<% } else { %>Pendiente<% } %></p>
+                    
+                    <!-- Button to toggle subtasks -->
+                    <div class="collapse-subtasks" onclick="toggleSubtasks(this)" aria-expanded="false">
+                        Mostrar subtareas
+                    </div>
+                    
+                    <!-- Subtasks list -->
+                    <ul class="subtask-list" style="display: none;">
+                        <% if (tarea.subtareas && tarea.subtareas.length > 0) { %>
+                            <% tarea.subtareas.forEach(subtarea => { %>
+                                <li class="subtask">
+                                    <%= subtarea.descripcion %> - Estado: <% if (subtarea.completado) { %>Completado<% } else { %>Pendiente<% } %>
+                                    <div class="subtask-buttons">
+                                        <!-- Edit subtask -->
+                                        <a href="/tareas/<%= subtarea._id %>/editar-subtarea" class="btn-icon" aria-label="Editar subtarea">
+                                            <img src="/images/editar.png" alt="Editar subtarea">
+                                        </a>
+                                        <!-- Delete subtask -->
+                                        <a href="/tareas/<%= subtarea._id %>/eliminar" class="btn-icon" aria-label="Eliminar subtarea">
+                                            <img src="/images/eliminar.png" alt="Eliminar subtarea">
+                                        </a>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        <% } else { %>
+                            <li class="subtask">No hay subtareas</li>
+                        <% } %>
+                    </ul>
+
+                    <!-- Button to add subtask -->
+                    <a href="/tareas/<%= tarea._id %>/subtarea" class="btn btn-info btn-block mt-3">Añadir Subtarea</a>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="text-center">No hay tareas</p>
+        <% } %>
+
     </div>
+
+    <script>
+        // Function to toggle the visibility of subtasks
+        function toggleSubtasks(element) {
+            const subtaskList = element.nextElementSibling;
+            if (subtaskList.style.display === "none") {
+                subtaskList.style.display = "block";
+                element.textContent = "Ocultar subtareas";
+                element.setAttribute("aria-expanded", "true");
+            } else {
+                subtaskList.style.display = "none";
+                element.textContent = "Mostrar subtareas";
+                element.setAttribute("aria-expanded", "false");
+            }
+        }
+
+        // Función para manejar la recomendación de la tarea
+        document.getElementById('recomendar-btn').addEventListener('click', async function() {
+            const mensajeDiv = document.getElementById('mensaje');
+            
+            try {
+                // Hacer la petición GET al servidor para obtener la tarea recomendada
+                const response = await fetch('/tareas/recomendar', { method: 'GET' });
+                const result = await response.json();
+                
+                // Verificar si la recomendación fue exitosa
+                if (result.success) {
+                    // Almacenar el mensaje en el localStorage para que se muestre tras recargar la página
+                    const fechaAjustada = new Date(new Date(result.tarea.fechaVencimiento).getTime() + (new Date().getTimezoneOffset() * 60000)).toLocaleDateString('es-ES');
+                    localStorage.setItem('mensaje', `Tarea recomendada: ${result.tarea.descripcion} con fecha de vencimiento: ${fechaAjustada}`);
+                    localStorage.setItem('tipoMensaje', 'success');
+                    
+                    // Recargar la página para mostrar la tarea recomendada
+                    window.location.reload();
+                } else {
+                    // Almacenar el mensaje de error en el localStorage
+                    localStorage.setItem('mensaje', result.message);
+                    localStorage.setItem('tipoMensaje', 'error');
+                    
+                    // Recargar la página de todas maneras
+                    window.location.reload();
+                }
+                
+            } catch (error) {
+                // Manejar cualquier error durante la solicitud
+                localStorage.setItem('mensaje', 'Ocurrió un error al intentar recomendar una tarea.');
+                localStorage.setItem('tipoMensaje', 'error');
+                window.location.reload();
+            }
+        });
+
+        // Función para manejar la restauración de la última tarea eliminada
+        document.getElementById('restaurar-btn').addEventListener('click', async function() {
+            const mensajeDiv = document.getElementById('mensaje');
+
+            try {
+                // Hacer la petición POST al servidor para restaurar la última tarea eliminada
+                const response = await fetch('/tareas/restaurar-ultima-eliminada', { method: 'POST' });
+                const result = await response.json();
+
+                // Verificar si la restauración fue exitosa
+                if (result.success) {
+                    // Almacenar el mensaje en el localStorage para que se muestre tras recargar la página
+                    localStorage.setItem('mensaje', result.message);
+                    localStorage.setItem('tipoMensaje', 'success');
+
+                    // Recargar la página para mostrar la tarea restaurada
+                    window.location.reload();
+                } else {
+                    // Almacenar el mensaje de error en el localStorage
+                    localStorage.setItem('mensaje', result.message);
+                    localStorage.setItem('tipoMensaje', 'error');
+
+                    // Recargar la página de todas maneras
+                    window.location.reload();
+                }
+
+            } catch (error) {
+                // Manejar cualquier error durante la solicitud
+                localStorage.setItem('mensaje', 'Ocurrió un error al intentar restaurar la tarea.');
+                localStorage.setItem('tipoMensaje', 'error');
+                window.location.reload();
+            }
+        });
+
+
+        // Mostrar el mensaje almacenado en el localStorage (si existe)
+        window.onload = function() {
+            const mensajeDiv = document.getElementById('mensaje');
+            const mensaje = localStorage.getItem('mensaje');
+            const tipoMensaje = localStorage.getItem('tipoMensaje');
+
+            if (mensaje) {
+                // Mostrar el mensaje en el div de mensajes
+                mensajeDiv.textContent = mensaje;
+                
+                if (tipoMensaje === 'success') {
+                    mensajeDiv.classList.remove('alert-danger');
+                    mensajeDiv.classList.add('alert-info');
+                } else {
+                    mensajeDiv.classList.remove('alert-info');
+                    mensajeDiv.classList.add('alert-danger');
+                }
+
+                // Mostrar el div de mensaje
+                mensajeDiv.style.display = 'block';
+
+                // Limpiar el mensaje del localStorage
+                localStorage.removeItem('mensaje');
+                localStorage.removeItem('tipoMensaje');
+            }
+        };
+
+        function ordenarPorFechaDescendente() {
+            window.location.href = '/tareas/ordenar-fecha-desc';
+        }
+
+        function ordenarPorFechaAscendente() {
+            window.location.href = '/tareas/ordenar-fecha-asc';
+        }
+
+        function ordenarPorPrioridadAscendente() {
+            window.location.href = '/tareas/ordenar-prioridad-asc';
+        }
+
+        function ordenarPorPrioridadDescendente() {
+            window.location.href = '/tareas/ordenar-prioridad-desc';
+        }
+    </script>
 </body>
 </html>

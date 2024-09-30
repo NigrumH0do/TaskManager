@@ -21,7 +21,6 @@ class BST {
     }
 
     insertNode(root, node) {
-        // Comparar las fechas de vencimiento
         if (new Date(node.data.fechaVencimiento) < new Date(root.data.fechaVencimiento)) {
             if (root.left === null) {
                 root.left = node;
@@ -37,14 +36,24 @@ class BST {
         }
     }
 
-    findMin(root = this.root) {
-        if (!root) {
-            return null;
+    // Método para obtener las tareas en orden descendente
+    inorderDesc(node = this.root, result = []) {
+        if (node !== null) {
+            this.inorderDesc(node.right, result); // Primero visita el nodo derecho
+            result.push(node.data); // Luego la raíz
+            this.inorderDesc(node.left, result); // Finalmente el nodo izquierdo
         }
-        while (root.left !== null) {
-            root = root.left;
+        return result;
+    }
+
+    // Método para obtener las tareas en orden ascendente
+    inorderAsc(node = this.root, result = []) {
+        if (node !== null) {
+            this.inorderAsc(node.left, result); // Primero visita el nodo izquierdo
+            result.push(node.data); // Luego la raíz
+            this.inorderAsc(node.right, result); // Finalmente el nodo derecho
         }
-        return root.data;
+        return result;
     }
 }
 

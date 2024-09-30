@@ -1,18 +1,27 @@
 class Stack {
-    constructor() {
-      this.items = [];
-    }
-  
-    push(element) {
-      this.items.push(element);
-    }
-  
-    pop() {
-      if (this.items.length === 0) {
-        return "Underflow";
-      }
-      return this.items.pop();
-    }
-  }  
+  constructor() {
+      this.stack = [];
+  }
 
-  module.exports = Stack;
+  // Añadir una tarea a la pila
+  push(item) {
+      this.stack.push(item);
+  }
+
+  // Remover y devolver la última tarea añadida
+  pop() {
+      return this.stack.pop();
+  }
+
+  // Ver la última tarea sin removerla
+  peek() {
+      return this.stack[this.stack.length - 1];
+  }
+
+  // Verificar si la pila está vacía
+  isEmpty() {
+      return this.stack.length === 0;
+  }
+}
+
+module.exports = Stack;

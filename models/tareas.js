@@ -16,13 +16,20 @@ const tareaSchema = new Schema({
         required: [true, 'La fecha de vencimiento es requerida']
     },
     prioridad: {
-        type: Number,
-        required: [true, 'La prioridad es requerida']
+        type: String,
+        required: [true, 'La prioridad es requerida'],
+        enum: ['Alta', 'Media', 'Baja'] // Solo permite estos valores
     },
     completado: {
         type: Boolean,
         required: [true, 'El estado de la tarea es requerido'],
         default: false
+    },
+    // Si la tarea es una subtarea, este campo hace referencia a la tarea padre
+    tareaPadre: {
+        type: Schema.Types.ObjectId,
+        ref: 'Tarea',
+        default: null // Si no tiene un padre, entonces es una tarea principal
     }
 });
 

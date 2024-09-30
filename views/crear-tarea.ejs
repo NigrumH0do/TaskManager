@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Tarea</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4 text-center">Crear Nueva Tarea</h1>
+
+        <form action="/tareas/crear" method="POST" onsubmit="return validarFecha()">
+            <div class="form-group">
+                <label for="descripcion">Descripción</label>
+                <input type="text" id="descripcion" name="descripcion" class="form-control" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="fechaVencimiento">Fecha de Vencimiento</label>
+                <input type="date" id="fechaVencimiento" name="fechaVencimiento" class="form-control" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="prioridad">Prioridad</label>
+                <select id="prioridad" name="prioridad" class="form-control" required>
+                    <option value="Baja">Baja</option>
+                    <option value="Media">Media</option>
+                    <option value="Alta">Alta</option>
+                </select>
+            </div>
+        
+            <!-- Estado fijo como 'Pendiente' -->
+            <input type="hidden" name="estado" value="Pendiente">
+        
+            <button type="submit" class="btn btn-primary">Crear Tarea</button>
+            <a href="/tareas" class="btn btn-secondary">Cancelar</a>
+        </form>        
+    </div>
+
+    <script>
+        function validarFecha() {
+            const fechaVencimiento = document.getElementById('fechaVencimiento').value;
+            const hoy = new Date().toISOString().split('T')[0]; // Obtener la fecha actual en formato YYYY-MM-DD
+
+            if (fechaVencimiento <= hoy) {
+                alert('La fecha de vencimiento debe ser posterior a la fecha actual.');
+                return false; // Previene el envío del formulario
+            }
+
+            return true; // Permite el envío del formulario si la fecha es válida
+        }
+    </script>
+</body>
+</html>
